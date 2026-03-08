@@ -235,7 +235,7 @@
         <div class="tarjeta-cristal">
             <div style="font-size: 2rem; margin-bottom: 10px;">🌹 🌹 🌹</div>
             <h1>Carolina</h1>
-            <div class="etiqueta">Feliz Día de la Mujer y ¡Felices 9 Meses mi amor bonito ❤️ !</div>
+            <div class="etiqueta">Feliz Día de la Mujer y Felices 9 Meses mi amor bonito ❤️ </div>
             
             <div class="contenedor-stack" id="galeria-polaroid">
                 <div class="polaroid activa"><img src="foto1.JPG" alt="Carolina y Junior 1"></div>
@@ -358,7 +358,7 @@
                     <h4>Those Eyes</h4>
                     <p>New West - Canción que me recuerda a ti siempre</p>
                 </div>
-                <audio id="audio-cancion" src="New West - Those Eyes (Home Session).mp3" loop></audio>
+                <audio id="audio-cancion" src="cancion.mp3" loop></audio>
                 <div class="btn-play" id="btn-play" onclick="togglePlay()">
                     <i class='bx bx-play'></i>
                 </div>
@@ -459,6 +459,11 @@
 
             if (codigoIngresado.length === 4) {
                 if (codigoIngresado === codigoCorrecto) {
+                    
+                    // SOLUCIÓN MÓVIL: Iniciamos la música EXACTAMENTE al teclear el último número.
+                    // Al ser una acción directa del dedo, el celular no la bloquea.
+                    if(!reproduciendo) togglePlay();
+
                     mensajeError.innerText = "";
                     candado.classList.add('candado-abierto');
                     
@@ -471,8 +476,8 @@
                                 contenidoPrincipal.style.opacity = '1';
                                 iniciarEfectos(); 
                                 
+                                // El texto sí puede esperar para empezar a escribirse
                                 setTimeout(() => {
-                                    if(!reproduciendo) togglePlay();
                                     escribirTexto();
                                 }, 500);
 
@@ -491,6 +496,7 @@
                 }
             }
         }
+        
 
         // --- CONTENIDO GENERAL ---
         function iniciarEfectos() {
@@ -549,3 +555,4 @@
 </body>
 
 </html>
+
