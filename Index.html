@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Carolina 🌹</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --palo-rosa: #DCAE96;
+            --rose-gold: #B76E79;
+            --rosado-suave: #FADadd;
+            --texto-oscuro: #4a4a4a;
+            --blanco-cristal: rgba(255, 255, 255, 0.75);
+            --borde-cristal: rgba(255, 255, 255, 0.9);
+            --color-candado: #E58D9E;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #fdf5f6 0%, #f8e1e7 50%, #fadadd 100%);
+            color: var(--texto-oscuro);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- PANTALLA DE BLOQUEO (CANDADO) --- */
+        #pantalla-bloqueo {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #f8e1e7 0%, #f3c6d1 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 1000; transition: opacity 1s ease, visibility 1s;
+        }
+
+        .candado-contenedor { position: relative; display: flex; flex-direction: column; align-items: center; animation: flotarCandado 3s ease-in-out infinite; }
+        .arco {
+            width: 100px; height: 80px; border: 15px solid #e0e0e0; border-bottom: none;
+            border-radius: 50px 50px 0 0; margin-bottom: -15px; z-index: 1;
+            transition: transform 0.5s ease; transform-origin: left bottom; box-shadow: inset 0 5px 10px rgba(0,0,0,0.1);
+        }
+        .cuerpo-candado {
+            background: var(--color-candado); padding: 30px; border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(229, 141, 158, 0.4); text-align: center; z-index: 2; position: relative;
+        }
+        .cuerpo-candado::before, .cuerpo-candado::after { content: '💖'; position: absolute; font-size: 1.5rem; opacity: 0.7; }
+        .cuerpo-candado::before { top: 15px; left: 15px; }
+        .cuerpo-candado::after { top: 15px; right: 15px; }
+        .cuerpo-candado p { color: white; font-weight: 600; margin-bottom: 20px; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+
+        .inputs-codigo { display: flex; gap: 10px; justify-content: center; }
+        .inputs-codigo input {
+            width: 50px; height: 60px; font-size: 2rem; text-align: center; border: none;
+            border-radius: 10px; background: #5d4037; color: white; font-family: 'Playfair Display', serif;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .inputs-codigo input:focus { outline: 2px solid white; }
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+        .mensaje-error { color: #d32f2f; font-size: 0.9rem; margin-top: 15px; font-weight: bold; height: 20px; }
+
+        @keyframes flotarCandado { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        @keyframes vibrarError { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+
+        .candado-error { animation: vibrarError 0.5s ease; }
+        .candado-abierto .arco { transform: translateY(-20px) rotateY(180deg); }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        #contenido-principal {
+            display: none; justify-content: center; align-items: center; min-height: 100vh;
+            padding: 40px 20px; opacity: 0; transition: opacity 1.5s ease;
+        }
+
+        .petalo {
+            position: fixed; top: -10%; z-index: 0; user-select: none;
+            animation: caer linear infinite; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));
+        }
+        @keyframes caer { 0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; } }
+
+        .tarjeta-cristal {
+            background: var(--blanco-cristal); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--borde-cristal); border-radius: 24px; padding: 40px; width: 100%;
+            max-width: 550px; text-align: center; box-shadow: 0 15px 35px rgba(183, 110, 121, 0.2);
+            position: relative; z-index: 10;
+        }
+
+        h1 { font-family: 'Playfair Display', serif; color: var(--rose-gold); font-size: 2.5rem; margin-bottom: 5px; line-height: 1.2; }
+        .etiqueta {
+            display: inline-block; background-color: var(--rose-gold); color: white; padding: 5px 15px;
+            border-radius: 20px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;
+            margin-top: 10px; margin-bottom: 20px; font-weight: 600; box-shadow: 0 4px 10px rgba(183, 110, 121, 0.3);
+        }
+
+        /* Galería Polaroid */
+        .contenedor-stack { position: relative; width: 100%; height: 320px; margin: 30px 0 40px 0; display: flex; justify-content: center; align-items: center; perspective: 1000px; }
+        .polaroid {
+            position: absolute; width: 230px; height: 280px; background: #fff; padding: 12px 12px 45px 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15); transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); border-radius: 4px; display: flex; flex-direction: column;
+        }
+        .polaroid img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; background-color: #f0f0f0; }
+        .polaroid::after {
+            content: 'Nuestra Historia ❤️'; position: absolute; bottom: 12px; left: 0; width: 100%;
+            text-align: center; font-family: 'Great Vibes', cursive; font-size: 1.5rem; color: var(--texto-oscuro);
+        }
+        .polaroid.inactiva { transform: rotate(var(--rotacion)) scale(0.95); z-index: 1; opacity: 0.8; }
+        .polaroid.activa { transform: rotate(0deg) scale(1.05); z-index: 5; opacity: 1; box-shadow: 0 15px 30px rgba(0,0,0,0.25); }
+        .polaroid.saliendo { transform: translateX(150px) rotate(25deg) scale(1.1); opacity: 0; z-index: 6; }
+
+        /* Contador */
+        .contador-caja { background: rgba(255, 255, 255, 0.6); border-radius: 15px; padding: 15px; margin-bottom: 25px; border: 1px dashed var(--palo-rosa); }
+        .contador-titulo { font-size: 0.9rem; color: var(--rose-gold); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .tiempo { display: flex; justify-content: center; gap: 15px; }
+        .unidad { display: flex; flex-direction: column; align-items: center; }
+        .numero { font-size: 1.8rem; font-weight: 600; color: var(--texto-oscuro); font-family: 'Playfair Display', serif; }
+        .texto-unidad { font-size: 0.7rem; color: var(--palo-rosa); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Máquina de Escribir */
+        .contenedor-maquina { min-height: 80px; margin-bottom: 15px; text-align: center; }
+        #texto-maquina { font-size: 1.05rem; line-height: 1.6; font-weight: 400; color: var(--texto-oscuro); }
+        .cursor-parpadeo { border-right: 2px solid var(--rose-gold); animation: parpadeo 0.7s step-end infinite; }
+        @keyframes parpadeo { 50% { border-color: transparent; } }
+
+        /* LÍNEA DE TIEMPO CON FOTOS */
+        .linea-tiempo { position: relative; margin: 35px 0 25px 0; padding-left: 20px; text-align: left; }
+        .linea-tiempo::before { content: ''; position: absolute; left: 25px; top: 40px; bottom: 10px; width: 2px; background: rgba(183, 110, 121, 0.3); }
+        .titulo-timeline { color: var(--rose-gold); font-family: 'Playfair Display', serif; font-size: 1.4rem; text-align: center; margin-bottom: 25px; margin-left: -20px; }
+        .timeline-item { position: relative; margin-bottom: 25px; padding-left: 35px; }
+        .timeline-punto { position: absolute; left: 0; top: 5px; width: 12px; height: 12px; background: var(--rose-gold); border-radius: 50%; box-shadow: 0 0 0 4px rgba(183, 110, 121, 0.2); }
+        .timeline-contenido {
+            background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 12px;
+            border-left: 3px solid var(--rose-gold); box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.3s ease;
+        }
+        .timeline-contenido:hover { transform: translateX(5px); }
+        .timeline-fecha { display: block; font-size: 0.8rem; color: var(--palo-rosa); font-weight: 600; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .timeline-contenido p { font-size: 0.95rem; margin-bottom: 0; line-height: 1.4; color: var(--texto-oscuro); }
+        
+        .timeline-foto {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* --- REPRODUCTOR MUSICAL CON FOTO DE FONDO --- */
+        .reproductor-musical {
+            position: relative;
+            background: url('fondo-reproductor.JPG') center/cover no-repeat;
+            border-radius: 15px; padding: 15px; margin: 20px 0;
+            display: flex; align-items: center; gap: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+        .reproductor-musical::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: 1;
+        }
+        .reproductor-musical > * { position: relative; z-index: 2; }
+        
+        .disco {
+            width: 60px; height: 60px; border-radius: 50%; background: url('portada-cancion.PNG') center/cover;
+            background-color: var(--palo-rosa); border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            animation: girar 5s linear infinite paused; flex-shrink: 0;
+        }
+        .disco.tocando { animation-play-state: running; }
+        @keyframes girar { 100% { transform: rotate(360deg); } }
+        
+        .info-cancion { flex-grow: 1; text-align: left; }
+        .info-cancion h4 { color: white; margin-bottom: 3px; font-size: 1.15rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.6); }
+        .info-cancion p { color: rgba(255, 255, 255, 0.85); font-size: 0.85rem; margin: 0; font-style: italic; text-shadow: 1px 1px 3px rgba(0,0,0,0.6); }
+        
+        .btn-play {
+            width: 45px; height: 45px; border-radius: 50%; background: rgba(255, 255, 255, 0.9); color: var(--rose-gold);
+            display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s, background 0.3s; padding-left: 3px;
+        }
+        .btn-play.pausar { padding-left: 0; }
+        .btn-play:active { transform: scale(0.95); }
+
+        /* Botón Sorpresa */
+        .btn-sorpresa {
+            background: linear-gradient(45deg, var(--rose-gold), #e895a5); color: white; border: none;
+            padding: 12px 25px; border-radius: 30px; font-size: 1rem; font-family: 'Montserrat', sans-serif;
+            font-weight: 600; cursor: pointer; box-shadow: 0 5px 15px rgba(183, 110, 121, 0.4);
+            transition: transform 0.2s ease; margin-top: 10px; width: 100%; max-width: 350px;
+        }
+        .btn-sorpresa:active { transform: scale(0.95); }
+        .caja-mensaje-sorpresa {
+            background: rgba(255, 255, 255, 0.8); border-left: 4px solid var(--rose-gold); padding: 15px;
+            border-radius: 0 10px 10px 0; font-style: italic; color: var(--texto-oscuro); font-size: 0.95rem;
+            display: none; margin: 15px auto 0 auto; max-width: 350px; animation: fadeIn 0.5s ease; text-align: left;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .firma { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: var(--rose-gold); margin-top: 30px; line-height: 1; }
+
+        @media (max-width: 480px) {
+            .tarjeta-cristal { padding: 30px 15px; }
+            h1 { font-size: 2.1rem; }
+            .contenedor-stack { height: 280px; }
+            .polaroid { width: 200px; height: 240px; }
+            .polaroid::after { font-size: 1.3rem; bottom: 8px; }
+            .inputs-codigo input { width: 45px; height: 55px; font-size: 1.5rem; }
+            .reproductor-musical { flex-direction: column; text-align: center; gap: 10px; }
+            .info-cancion { text-align: center; }
+            .contenedor-maquina { min-height: 100px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pantalla-bloqueo">
+        <div class="candado-contenedor" id="candado">
+            <div class="arco"></div>
+            <div class="cuerpo-candado">
+                <p>Ingresa nuestro día y mes</p>
+                <div class="inputs-codigo">
+                    <input type="number" class="digito" max="9" min="0">
+                    <input type="number" class="digito" max="9" min="0">
+                    <input type="number" class="digito" max="9" min="0">
+                    <input type="number" class="digito" max="9" min="0">
+                </div>
+                <div class="mensaje-error" id="mensaje-error"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contenido-principal">
+        <div class="tarjeta-cristal">
+            <div style="font-size: 2rem; margin-bottom: 10px;">🌹 🌹 🌹</div>
+            <h1>Carolina</h1>
+            <div class="etiqueta">Feliz Día de la Mujer y ¡Felices 9 Meses mi amor bonito ❤️ !</div>
+            
+            <div class="contenedor-stack" id="galeria-polaroid">
+                <div class="polaroid activa"><img src="foto1.jpg" alt="Carolina y Junior 1"></div>
+                <div class="polaroid inactiva"><img src="foto2.jpg" alt="Carolina y Junior 2"></div>
+                <div class="polaroid inactiva"><img src="foto3.jpg" alt="Carolina y Junior 3"></div>
+                <div class="polaroid inactiva"><img src="foto4.jpg" alt="Carolina y Junior 4"></div>
+            </div>
+
+            <div class="contador-caja">
+                <div class="contador-titulo">Tiempo construyendo esta historia</div>
+                <div class="tiempo" id="contador">
+                    <div class="unidad"><span class="numero" id="dias">00</span><span class="texto-unidad">Días</span></div>
+                    <div class="unidad"><span class="numero" id="horas">00</span><span class="texto-unidad">Horas</span></div>
+                    <div class="unidad"><span class="numero" id="minutos">00</span><span class="texto-unidad">Min</span></div>
+                    <div class="unidad"><span class="numero" id="segundos">00</span><span class="texto-unidad">Seg</span></div>
+                </div>
+            </div>
+
+            <div class="contenedor-maquina">
+                <span id="texto-maquina" class="cursor-parpadeo"></span>
+            </div>
+
+            <div class="linea-tiempo">
+                <h3 class="titulo-timeline">Nuestra Historia</h3>
+                
+                <div class="timeline-item">
+                    <div class="timeline-punto"></div>
+                    <div class="timeline-contenido">
+                        <span class="timeline-fecha">23 de Diciembre, 2024</span>
+                        <p>El día que mi corazón te vió un poco más cerca que ayer. ✨</p>
+                        <img src="foto-primero.JPG" alt="La primera vez que estuvimos cerca" class="timeline-foto">
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-punto"></div>
+                    <div class="timeline-contenido">
+                        <span class="timeline-fecha">11 de febrero, 2025</span>
+                        <p>Cuando te mandé un presente sorpresa por tu cumpleaños y al instante ya intuías que era yo 😅</p>
+                        <img src="cumpleaños.JPG" alt="Cumpleaños 15" class="timeline-foto">
+                    </div>
+                </div>
+
+                 <div class="timeline-item">
+                    <div class="timeline-punto"></div>
+                    <div class="timeline-contenido">
+                        <span class="timeline-fecha">12 de Abril, 2025</span>
+                        <p>Cuando me dejaste mi gasosita y mi hamburguesita. 🤤</p>
+                        <img src="gaseosa-hamburguesa.jpg" alt="La primera vez que me dejaste mi gasosa" class="timeline-foto">
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-punto"></div>
+                    <div class="timeline-contenido">
+                        <span class="timeline-fecha">Un Día Inolvidable</span>
+                        <p>Nuestro primer viaje juntos. 💖</p>
+                        <img src="viaje-1.jpg" alt="Recuerdo especial" class="timeline-foto">
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-punto"></div>
+                    <div class="timeline-contenido">
+                        <span class="timeline-fecha">07 de Junio, 2025</span>
+                        <p>Nuestra primera degustación de vinos juntos💖</p>
+                        <img src="brindis.jpg" alt="Degustación de vinos" class="timeline-foto">
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-punto"></div>
+                    <div class="timeline-contenido">
+                        <span class="timeline-fecha">08 de Julio, 2025</span>
+                        <p>Nuestro primer mes y los primeros tulipanes 💖 (me decías que deje de mirarlas jajajajaja 😅)</p>
+                        <img src="mes-primero.jpg" alt="Mes primero" class="timeline-foto">
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-punto"></div>
+                    <div class="timeline-contenido">
+                        <span class="timeline-fecha">Rosas y más rosas para mi princesita 💞</span>
+                        <p>Cada rosa representa el amor que siento por ti 🫂</p>
+                        <img src="rosas.PNG" alt="Rosas para mi princesita" class="timeline-foto">
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-punto"></div>
+                    <div class="timeline-contenido">
+                        <span class="timeline-fecha">Probando comidita para nuestras anacondas</span>
+                        <p>Yendo a cualquier lugar porque contigo todo es mágico</p>
+                        <img src="comidita.JPG" alt="Chicharrones" class="timeline-foto">
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-punto"></div>
+                    <div class="timeline-contenido">
+                        <span class="timeline-fecha">14 de Febrero, 2026</span>
+                        <p>Nuestro primer San Valentín 💖</p>
+                        <img src="san-valentin.JPG" alt="Primer San Valentín" class="timeline-foto">
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-punto"></div>
+                    <div class="timeline-contenido">
+                        <span class="timeline-fecha">Un super Beso 💞😍</span>
+                        <p>Dandonos nuestros ricos y suculentos besitos 😊</p>
+                        <img src="besos.JPG" alt="Super besos" class="timeline-foto">
+                    </div>
+                </div>
+            </div>
+
+            <div class="reproductor-musical">
+                <div class="disco" id="disco"></div>
+                <div class="info-cancion">
+                    <h4>Those Eyes</h4>
+                    <p>New West - Canción que me recuerda a ti siempre</p>
+                </div>
+                <audio id="audio-cancion" src="New West - Those Eyes (Home Session).mp3" loop></audio>
+                <div class="btn-play" id="btn-play" onclick="togglePlay()">
+                    <i class='bx bx-play'></i>
+                </div>
+            </div>
+            
+            <button class="btn-sorpresa" id="btn-sorpresa">💌 Toca aquí si quieres saber por que eres muy importante para mi</button>
+            <div class="caja-mensaje-sorpresa" id="caja-sorpresa"></div>
+            
+            <div class="firma">Junior</div>
+        </div>
+    </div>
+
+    <script>
+        // --- REPRODUCTOR ---
+        const audio = document.getElementById('audio-cancion');
+        const btnPlay = document.getElementById('btn-play');
+        const disco = document.getElementById('disco');
+        let reproduciendo = false;
+
+        function togglePlay() {
+            if (reproduciendo) {
+                audio.pause();
+                btnPlay.innerHTML = "<i class='bx bx-play'></i>";
+                btnPlay.classList.remove('pausar');
+                disco.classList.remove('tocando');
+            } else {
+                audio.play();
+                btnPlay.innerHTML = "<i class='bx bx-pause'></i>";
+                btnPlay.classList.add('pausar');
+                disco.classList.add('tocando');
+            }
+            reproduciendo = !reproduciendo;
+        }
+
+        // --- MÁQUINA DE ESCRIBIR ---
+        const textoParaEscribir = "Hoy celebramos por partida doble. Celebro a la mujer maravillosa, fuerte e increíble que eres, y celebro también la inmensa suerte de llevar 9 meses caminando a tu lado. Gracias por tanto amor, por tanto cariño, pero sobre todo, gracias por ser tú. Lo estamos logrando amor mío, poco a poco, pero lo seguiremos logrando. Te amo con todo mi corazón ❤️";
+        const elementoTextoMaquina = document.getElementById('texto-maquina');
+        let indiceCaracter = 0;
+
+        function escribirTexto() {
+            if (indiceCaracter < textoParaEscribir.length) {
+                elementoTextoMaquina.innerHTML += textoParaEscribir.charAt(indiceCaracter);
+                indiceCaracter++;
+                setTimeout(escribirTexto, 50); 
+            } else {
+                setTimeout(() => {
+                    elementoTextoMaquina.classList.remove('cursor-parpadeo');
+                    elementoTextoMaquina.style.borderRight = 'none';
+                }, 3000); 
+            }
+        }
+
+        // --- BOTÓN SORPRESA ---
+        const razones = [
+            "Porque tu sonrisa ilumina hasta mi día más gris. ✨",
+            "Por la paz y seguridad que me das cuando me abrazas. 🫂",
+            "Porque eres la mujer más valiente y fuerte que conozco. 👑",
+            "Por cómo me apoyas en cada paso que doy. 🤍",
+            "Porque a tu lado, estos 9 meses han sido llenos de amor y compresión⏳",
+            "Por tu inteligencia y tu forma tan única de ver el mundo. 💡",
+            "Porque me haces querer ser un mejor hombre cada día. 🌱",
+            "Por nuestras risas y nuestros momentos juntos. 😂",
+            "Porque simplemente eres tú, mi persona favorita en el mundo. ❤️"
+        ];
+        const btnSorpresa = document.getElementById('btn-sorpresa');
+        const cajaSorpresa = document.getElementById('caja-sorpresa');
+
+        btnSorpresa.addEventListener('click', () => {
+            const random = Math.floor(Math.random() * razones.length);
+            cajaSorpresa.innerText = razones[random];
+            cajaSorpresa.style.display = 'none';
+            setTimeout(() => { cajaSorpresa.style.display = 'block'; }, 50);
+        });
+
+        // --- CANDADO ---
+        const inputs = document.querySelectorAll('.digito');
+        const candado = document.getElementById('candado');
+        const mensajeError = document.getElementById('mensaje-error');
+        const pantallaBloqueo = document.getElementById('pantalla-bloqueo');
+        const contenidoPrincipal = document.getElementById('contenido-principal');
+        
+        const codigoCorrecto = "0806";
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length > 1) { e.target.value = e.target.value.slice(0, 1); }
+                if (e.target.value !== '' && index < inputs.length - 1) { inputs[index + 1].focus(); }
+                validarCodigo();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) { inputs[index - 1].focus(); }
+            });
+        });
+
+        function validarCodigo() {
+            let codigoIngresado = "";
+            inputs.forEach(input => codigoIngresado += input.value);
+
+            if (codigoIngresado.length === 4) {
+                if (codigoIngresado === codigoCorrecto) {
+                    mensajeError.innerText = "";
+                    candado.classList.add('candado-abierto');
+                    
+                    setTimeout(() => {
+                        pantallaBloqueo.style.opacity = '0';
+                        setTimeout(() => {
+                            pantallaBloqueo.style.display = 'none';
+                            contenidoPrincipal.style.display = 'flex';
+                            setTimeout(() => {
+                                contenidoPrincipal.style.opacity = '1';
+                                iniciarEfectos(); 
+                                
+                                setTimeout(() => {
+                                    if(!reproduciendo) togglePlay();
+                                    escribirTexto();
+                                }, 500);
+
+                            }, 100);
+                        }, 1000);
+                    }, 800);
+
+                } else {
+                    candado.classList.add('candado-error');
+                    mensajeError.innerText = "Esa no es la fecha correcta 🤔";
+                    setTimeout(() => {
+                        candado.classList.remove('candado-error');
+                        inputs.forEach(input => input.value = '');
+                        inputs[0].focus();
+                    }, 600);
+                }
+            }
+        }
+
+        // --- CONTENIDO GENERAL ---
+        function iniciarEfectos() {
+            const polaroids = document.querySelectorAll('.polaroid');
+            let indexActual = 0;
+            polaroids.forEach((polaroid) => {
+                let rotacion = (Math.random() * 16 - 8); 
+                polaroid.style.setProperty('--rotacion', `${rotacion}deg`);
+            });
+            function cambiarPolaroid() {
+                const actual = polaroids[indexActual];
+                actual.classList.remove('activa');
+                actual.classList.add('saliendo');
+                indexActual = (indexActual + 1) % polaroids.length;
+                const siguiente = polaroids[indexActual];
+                setTimeout(() => {
+                    actual.classList.remove('saliendo');
+                    actual.classList.add('inactiva');
+                    siguiente.classList.remove('inactiva');
+                    siguiente.classList.add('activa');
+                }, 600);
+            }
+            setInterval(cambiarPolaroid, 4000);
+
+            const petalosArray = ['🌹', '🌸', '💮', '✨'];
+            for(let i = 0; i < 20; i++) {
+                let petalo = document.createElement('div');
+                petalo.classList.add('petalo');
+                petalo.innerText = petalosArray[Math.floor(Math.random() * petalosArray.length)];
+                petalo.style.left = Math.random() * 100 + 'vw';
+                petalo.style.fontSize = (Math.random() * 10 + 15) + 'px';
+                petalo.style.animationDuration = (Math.random() * 6 + 6) + 's';
+                petalo.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(petalo);
+            }
+
+            const fechaInicio = new Date("2025-06-08T00:00:00").getTime();
+            function actualizarContador() {
+                const ahora = new Date().getTime();
+                const diferencia = ahora - fechaInicio;
+                const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+                const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+                document.getElementById("dias").innerText = dias.toString().padStart(2, '0');
+                document.getElementById("horas").innerText = horas.toString().padStart(2, '0');
+                document.getElementById("minutos").innerText = minutos.toString().padStart(2, '0');
+                document.getElementById("segundos").innerText = segundos.toString().padStart(2, '0');
+            }
+            setInterval(actualizarContador, 1000);
+            actualizarContador();
+        }
+    </script>
+
+</body>
+</html>
